@@ -56,11 +56,10 @@ for(let i = 0; i < closeButtons.length; i++) {
 
 document.addEventListener('mousedown', function(evt) {
   if (evt.target.classList.contains('popup_is-opened')) {
-    for (var i= 0; i < popups.length; i++) {
-      popups[i].classList.remove('popup_is-opened');
-    }
-  }
-})
+    const openedPopup = document.querySelector('.popup_is-opened');
+    closePopup(openedPopup)
+  }
+});
 
 for(let i = 0; i < initialCards.length; i++) {
   const newCard = createCard(initialCards[i], handleImageClick, templateCard)
