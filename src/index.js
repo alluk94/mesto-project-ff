@@ -71,10 +71,14 @@ function editFormSubmit(evt) {
   const about = employInput.value;
   // отправляем запрос на редактирование профиля
   // после получения ответа, обновляем профиль
+  savingButton(editProfile, true)
   editProfileInfo({name, about})
   .then((data) => {
     createProfile(data);
     closePopup(editPopup);
+  })
+  .finally(() => {
+    savingButton(editProfile, false)
   })
 };
 
@@ -84,10 +88,14 @@ function editAvatarFormSubmit(evt) {
   console.log(avatar)
   // отправляем запрос на редактирование профиля
   // после получения ответа, обновляем профиль
+  savingButton(editAvatarForm, true)
   editProfileAvatar({avatar})
   .then((data) => {
     createProfile(data);
     closePopup(editAvatarPopup);
+  })
+  .finally(() => {
+    savingButton(editAvatarForm, false)
   })
 };
 
@@ -147,12 +155,16 @@ newFormCard.addEventListener('submit', function(evt) {
   const link = inputTypeUrl.value;
   // Отправляем запрос на создание карточки
   // после получения ответа, отображаем ее на странице
+  savingButton(newFormCard, true)
   addNewCard({name, link})
   .then((data) => {
     const newCard = createCard(data, handleImageClick, templateCard, deleteCard, handleLikeClick);
     listContainer.prepend(newCard);
     newFormCard.reset(); // clean form
     closePopup(newPopup);
+  })
+  .finally(() => {
+    savingButton(newFormCard, false)
   })
 })
 
@@ -188,6 +200,14 @@ function deleteCard(card, id) {
       closePopup(deletePopup);
     })
   })
+}
+
+function savingButton(form, isLoading) {
+  const button = form.querySelector('.popup__button')
+  if (isLoading) {
+    button.textContent = 'Сохранение...'
+  }
+  else button.textContent = 'Сохранить';
 }
 
 // validation
