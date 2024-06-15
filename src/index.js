@@ -48,6 +48,9 @@ Promise.all([getUserInfo(), getAllCards()]).then(([userInfo, cards]) => {
   createProfile(userInfo);
   renderCards(cards);
 })
+  .catch((error) => {
+    console.log(error);
+  })
 
 addButton.addEventListener('click', function() {
   openPopup(newPopup)
@@ -77,6 +80,9 @@ function editFormSubmit(evt) {
     createProfile(data);
     closePopup(editPopup);
   })
+  .catch((error) => {
+    console.log(error);
+  })
   .finally(() => {
     savingButton(editProfile, false)
   })
@@ -94,6 +100,9 @@ function editAvatarFormSubmit(evt) {
     createProfile(data);
     closePopup(editAvatarPopup);
   })
+  .catch((error) => {
+    console.log(error);
+  })
   .finally(() => {
     savingButton(editAvatarForm, false)
   })
@@ -102,20 +111,17 @@ function editAvatarFormSubmit(evt) {
 editProfile.addEventListener('submit', editFormSubmit);
 editAvatarForm.addEventListener('submit', editAvatarFormSubmit);
 
-for(let i = 0; i < closeButtons.length; i++) {
-  const button = closeButtons[i];
-  button.addEventListener('click', function(){
-    const modal = button.closest('.popup');
-    closePopup(modal)
-  }
-)};
 
-document.addEventListener('mousedown', function(evt) {
-  if (evt.target.classList.contains('popup_is-opened')) {
-    const openedPopup = document.querySelector('.popup_is-opened');
-    closePopup(openedPopup)
-  }
-});
+popups.forEach((popup) => {
+  popup.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_is-opened')) {
+          closePopup(popup)
+      }
+      if (evt.target.classList.contains('popup__close')) {
+        closePopup(popup)
+      }
+  })
+})
 
 function renderCards(cards) {
   for(let i = 0; i < cards.length; i++) {
@@ -139,13 +145,20 @@ function removeLike(card) {
   .then((data) => {
     updateLike(card, data)
   })
+  .catch((error) => {
+    console.log(error);
+  })
 }
+
 
 function putLike(card) {
   handleLikeCard(card.id)
   .then((data) => {
     console.log(data)
     updateLike(card, data)
+  })
+  .catch((error) => {
+    console.log(error);
   })
 }
 
@@ -162,6 +175,9 @@ newFormCard.addEventListener('submit', function(evt) {
     listContainer.prepend(newCard);
     newFormCard.reset(); // clean form
     closePopup(newPopup);
+  })
+  .catch((error) => {
+    console.log(error);
   })
   .finally(() => {
     savingButton(newFormCard, false)
@@ -191,15 +207,13 @@ function createProfile(data) {
 // 3. отправляет запрос на сервер (140), послу получения ответа удаляет карточку 142
 // 4. закрывает попап 143
 function deleteCard(card, id) {
-  openPopup(deletePopup)
-  deleteForm.addEventListener('submit', (event)=> {
-    event.preventDefault()
     handleDeleteCard(id)
     .then(() => {
       card.remove();
-      closePopup(deletePopup);
     })
-  })
+    .catch((error) => {
+      console.log(error);
+    })
 }
 
 function savingButton(form, isLoading) {

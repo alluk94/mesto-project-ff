@@ -17,14 +17,11 @@ function handleFetch(path, method, body) {
     headers:apiConfig.headers
   })
   // обработка ответа
-  .then(res => res.json())
-  .then((result) => {
-    console.log(result);
-    return result;
-  })
-  // обработчик ошибок
-  .catch((error) => {
-    console.log(error);
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
   })
 }
 // достаем информацию о пользователе с сервера
